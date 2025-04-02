@@ -8,25 +8,46 @@ const USER = {
 // 슬라이드 데이터
 const SLIDES = [
     {
-        title: '첫번쨰 컴퓨터',
-        content: '이 프레젠테이션은 WebSocket을 사용하여 모든 참가자의 화면을 실시간으로 동기화합니다.',
+        title: '컴퓨터의 발명',
+        content: '아타나소프-베리 컴퓨터(Atanasoff–Berry Computer)는 세계 최초의 전자식 컴퓨터이다.',
         image : 'static/firstcomputer.jpeg'
     },
     {
-        title: '주요 기능',
-        content: '- 발표자 제어\n- 실시간 동기화\n- 참가자 채팅\n- 발표자 전환\n- 룸 기반 분리'
+        title: '타이포와 알고리즘',
+        content: 'Ben Laposky의 전자 추상화 실험, 최초의 디지털 그래픽 실험.',
+        image : 'static/images (3).jpg'
     },
     {
-        title: '어떻게 작동하나요?',
-        content: 'Socket.io를 사용한 WebSocket 기술로, 서버가 모든 클라이언트의 상태를 동기화합니다. 발표자가 슬라이드를 변경하면 모든 참가자의 화면이 자동으로 업데이트됩니다.'
+        content: '차피노체의 디지털화 (1993)',
+        image : 'static/download (1).jpeg'
     },
     {
-        title: '확장 가능성',
-        content: '이 기본 시스템에 다양한 기능을 추가할 수 있습니다:\n- 화면 공유\n- 실시간 투표\n- 질문 & 답변\n- 드로잉 및 주석'
+        content: '2000년대 중반부터 타이포를 활용한 재밌는 실험들이 등장하기 시작했다. 실용적인 것부터 기괴한 것까지.',
+        image : 'static/image4.png'
     },
     {
-        title: '감사합니다',
-        content: '질문이 있으신가요?'
+        content: 'Yeohyun Ahn (TYPE I)',
+        image : 'static/image5.png'
+    },
+    {
+        title: 'Computational Design for Korean Typography',
+        content: '- 타입페이스의 골격 구조 추출 및 분석 (Skeletonization)\n - 한글 타이포그래피 제작에 편리함을 주는 도구\n - 알고리즘을 활용한 나만의 한글 타이포 만들기'
+    },
+    {
+        title: '지금까지 어떤 것들을 했냐면요...',
+        content: '<a href="https://p5js.org" target="_blank">p5.js</a>라는 프로그래밍 언어에 대한 스터디',
+        contentType: 'html',  // 이 속성을 추가
+        image: 'static/image6.png'
+    },
+    {
+        title : '변수 학습을 위한 예제 (김지혜)',
+        content: '<iframe src="https://editor.p5js.org/maziyo/full/bbOv9AWcc"></iframe>',
+        contentType: 'html',  // 이 속성을 추가
+    },
+    {
+        title : '폰트 학습 위한 예제 (장예원)',
+        content: '<iframe src="https://editor.p5js.org/blockbwriting/full/FqW2GFQaX"></iframe>',
+        contentType: 'html',  // 이 속성을 추가
     }
 ];
 

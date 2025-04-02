@@ -4,14 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>참가자 모드 - 실시간 동기화 프레젠테이션</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .presentation-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-area {
+            flex-grow: 1;
+            overflow: auto;
+            scroll-snap-type: y mandatory;
+        }
+        .slide-content {
+            scroll-snap-align: start;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .slide-content > * {
+            max-width: 80%;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="container">
             <div class="header-content">
-                <h1>실시간 동기화 프레젠테이션 - 참가자 모드</h1>
+                <h1>참가자 모드 - 실시간 동기화 프레젠테이션</h1>
                 <div class="header-info">
                     <span>
                         <i class="fas fa-user"></i>
@@ -33,54 +59,38 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="presentation-container">
-            <div class="slide-area">
-                <div class="slide-content">
-                    <h2 id="slideTitle">슬라이드 제목</h2>
-                    <div id="slideContent">슬라이드 내용이 여기에 표시됩니다.</div>
-                </div>
-                <div class="slide-indicator">
-                    <span id="currentSlideNum">1</span>/<span id="totalSlideNum">5</span>
+    <div class="container presentation-container">
+        <div class="slide-area" id="slideArea">
+            <!-- 슬라이드들이 여기에 동적으로 추가됩니다 -->
+        </div>
+        
+        <div class="sidebar">
+            <div class="participant-list">
+                <h3>참가자 목록</h3>
+                <div id="participantListContainer">
+                    <!-- 참가자 목록이 여기에 동적으로 추가됩니다 -->
                 </div>
             </div>
             
-            <div class="sidebar">
-                <div class="participant-list">
-                    <h3>참가자 목록</h3>
-                    <div id="participantListContainer">
-                        <!-- 참가자 목록이 여기에 동적으로 추가됩니다 -->
-                    </div>
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- 채팅 메시지가 여기에 동적으로 추가됩니다 -->
                 </div>
-                
-                <div class="chat-area">
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- 채팅 메시지가 여기에 동적으로 추가됩니다 -->
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="chatInput" placeholder="메시지 입력...">
-                        <button id="sendMessageBtn" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="메시지 입력...">
+                    <button id="sendMessageBtn" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="/js/common.js"></script>
+    <script src="js/common.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 초기 데이터 설정
-            let currentSlide = 0;
-            let totalSlides = SLIDES.length;
-            
-            // DOM 요소
-            const slideTitle = document.getElementById('slideTitle');
-            const slideContent = document.getElementById('slideContent');
-            const currentSlideNum = document.getElementById('currentSlideNum');
-            const totalSlideNum = document.getElementById('totalSlideNum');
+            const slideArea = document.getElementById('slideArea');
             const participantListContainer = document.getElementById('participantListContainer');
             const participantCount = document.getElementById('participantCount');
             const chatMessages = document.getElementById('chatMessages');
@@ -90,23 +100,39 @@
             const roomIdDisplay = document.getElementById('roomId');
             const exitBtn = document.getElementById('exitBtn');
             
-            // 유저 정보 표시
-            userName.textContent = USER.name;
-            roomIdDisplay.textContent = USER.roomId;
-            totalSlideNum.textContent = totalSlides;
-            
-            // 슬라이드 표시 함수
-            function showSlide(slideIndex) {
-                if (slideIndex < 0 || slideIndex >= totalSlides) {
-                    return;
-                }
+            // 슬라이드 렌더링 함수
+            function renderSlides() {
+                slideArea.innerHTML = '';
                 
-                currentSlide = slideIndex;
-                const slide = SLIDES[slideIndex];
+                SLIDES.forEach((slide, index) => {
+                    const slideElement = document.createElement('div');
+                    slideElement.className = 'slide-content';
+                    slideElement.dataset.slideIndex = index;
+                    
+                    const titleElement = document.createElement('h2');
+                    titleElement.textContent = slide.title;
+                    
+                    const contentElement = document.createElement('div');
+                    contentElement.innerHTML = formatMessage(slide.content);
+
+                    slideElement.appendChild(titleElement);
+                    slideElement.appendChild(contentElement);
+
+                    
+                    // 이미지 추가
+                    if (slide.image) {
+                        const imageElement = document.createElement('img');
+                        imageElement.src = slide.image;
+                        imageElement.alt = slide.title;
+                        imageElement.style.maxWidth = '100%'; // 이미지 크기 조정
+                        imageElement.style.maxHeight = '300px'; // 최대 높이 설정
+                        slideElement.appendChild(imageElement);
+
+                    }
                 
-                slideTitle.textContent = slide.title;
-                slideContent.innerHTML = formatMessage(slide.content);
-                currentSlideNum.textContent = slideIndex + 1;
+                    
+                    slideArea.appendChild(slideElement);
+                });
             }
             
             // 참가자 목록 업데이트 함수
@@ -140,20 +166,24 @@
                 `;
                 
                 chatMessages.appendChild(messageEl);
-                
-                // 스크롤을 맨 아래로
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
             
-            // 채팅 메시지 전송
+            // 채팅 메시지 전송 함수
             function sendMessage() {
                 const message = chatInput.value.trim();
-                
                 if (message) {
                     socket.emit('sendMessage', message);
                     chatInput.value = '';
                 }
             }
+            
+            // 초기 렌더링
+            renderSlides();
+            
+            // 유저 정보 표시
+            userName.textContent = USER.name;
+            roomIdDisplay.textContent = USER.roomId;
             
             // 나가기 버튼
             exitBtn.addEventListener('click', function() {
@@ -164,8 +194,8 @@
                 }
             });
             
-            // 채팅 입력 이벤트
-            chatInput.addEventListener('keypress', function(e) {
+            // 채팅 이벤트
+            chatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     sendMessage();
                 }
@@ -173,30 +203,39 @@
             
             sendMessageBtn.addEventListener('click', sendMessage);
             
+            // 현재 슬라이드 추적 변수
+            let currentSlideIndex = 0;
+            let isScrollingFromPresenter = false;
+            
             // Socket.io 초기화
-            initializeSocket({
-                onConnect: () => {
-                    console.log('참가자 모드 소켓 연결 성공');
-                },
-                onConnectError: (error) => {
-                    console.error('소켓 연결 오류:', error);
-                    alert('서버 연결에 실패했습니다. 페이지를 새로고침 해주세요.');
-                },
+            const socket = initializeSocket({
                 onRoomState: (state) => {
-                    showSlide(state.currentSlide);
-                    if (state.participants) {
-                        updateParticipantList(Object.values(state.participants));
+                    // 초기 슬라이드 동기화
+                    const slides = slideArea.querySelectorAll('.slide-content');
+                    if (slides[state.currentSlide]) {
+                        isScrollingFromPresenter = true;
+                        slides[state.currentSlide].scrollIntoView({ behavior: 'smooth' });
+                        currentSlideIndex = state.currentSlide;
+                        setTimeout(() => { isScrollingFromPresenter = false; }, 500);
                     }
-                    
-                    totalSlides = state.totalSlides || SLIDES.length;
-                    totalSlideNum.textContent = totalSlides;
                 },
                 onSlideChanged: (data) => {
-                    showSlide(data.slideNumber);
+                    // 발표자가 슬라이드 변경 시 동기화
+                    const slides = slideArea.querySelectorAll('.slide-content');
+                    if (slides[data.slideNumber]) {
+                        isScrollingFromPresenter = true;
+                        slides[data.slideNumber].scrollIntoView({ behavior: 'smooth' });
+                        currentSlideIndex = data.slideNumber;
+                        setTimeout(() => { isScrollingFromPresenter = false; }, 500);
+                    }
                 },
-                onTotalSlidesUpdate: (data) => {
-                    totalSlides = data.total;
-                    totalSlideNum.textContent = totalSlides;
+                onScrollSync: (data) => {
+                    // 발표자의 스크롤 위치 동기화
+                    if (currentSlideIndex === data.slideNumber) {
+                        isScrollingFromPresenter = true;
+                        slideArea.scrollTop = data.scrollTop;
+                        setTimeout(() => { isScrollingFromPresenter = false; }, 500);
+                    }
                 },
                 onParticipantsUpdate: (data) => {
                     updateParticipantList(data.participants);
@@ -213,8 +252,16 @@
                 }
             });
             
-            // 첫 슬라이드 표시
-            showSlide(0);
+            // 참가자의 스크롤은 발표자에 의해서만 움직이도록 제한
+            slideArea.addEventListener('scroll', function() {
+                // 발표자에 의한 스크롤이 아닌 경우 원래 위치로 복원
+                if (!isScrollingFromPresenter) {
+                    const slides = this.querySelectorAll('.slide-content');
+                    if (slides[currentSlideIndex]) {
+                        slides[currentSlideIndex].scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
         });
     </script>
 </body>

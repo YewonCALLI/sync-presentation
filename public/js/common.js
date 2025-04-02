@@ -1,6 +1,3 @@
-// 공통 JavaScript 함수 및 유틸리티
-
-// 현재 사용자 정보 저장
 const USER = {
     id: null, // Socket.io에서 할당
     name: localStorage.getItem('userName') || '익명',
@@ -11,8 +8,9 @@ const USER = {
 // 슬라이드 데이터
 const SLIDES = [
     {
-        title: '실시간 동기화 프레젠테이션',
-        content: '이 프레젠테이션은 WebSocket을 사용하여 모든 참가자의 화면을 실시간으로 동기화합니다.'
+        title: '첫번쨰 컴퓨터',
+        content: '이 프레젠테이션은 WebSocket을 사용하여 모든 참가자의 화면을 실시간으로 동기화합니다.',
+        image : 'static/firstcomputer.jpeg'
     },
     {
         title: '주요 기능',
@@ -144,6 +142,13 @@ function initializeSocket(callbacks = {}) {
         }
     });
     
+    // 스크롤 동기화 이벤트 추가
+    socket.on('scrollPresentation', (data) => {
+        if (!USER.isPresenter && callbacks.onScrollSync) {
+            callbacks.onScrollSync(data);
+        }
+    });
+    
     // 슬라이드 변경 수신
     socket.on('slideChanged', (data) => {
         console.log('슬라이드 변경 수신:', data);
@@ -194,4 +199,18 @@ function initializeSocket(callbacks = {}) {
     });
     
     return socket;
+}
+
+// 스크롤 Throttle 유틸리티 함수
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
 }

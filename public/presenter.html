@@ -4,14 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>발표자 모드 - 실시간 동기화 프레젠테이션</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .presentation-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-area {
+            flex-grow: 1;
+            overflow: auto;
+            scroll-snap-type: y mandatory;
+        }
+        .slide-content {
+            scroll-snap-align: start;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .slide-content > * {
+            max-width: 80%;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="container">
             <div class="header-content">
-                <h1>실시간 동기화 프레젠테이션 - 발표자 모드</h1>
+                <h1>발표자 모드</h1>
                 <div class="header-info">
                     <span>
                         <i class="fas fa-user"></i>
@@ -36,64 +62,38 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="presentation-container">
-            <div class="slide-area">
-                <div class="slide-content">
-                    <h2 id="slideTitle">슬라이드 제목</h2>
-                    <div id="slideContent">슬라이드 내용이 여기에 표시됩니다.</div>
-                </div>
-                <div class="slide-navigation">
-                    <button id="prevSlideBtn" class="btn btn-primary">
-                        <i class="fas fa-chevron-left"></i> 이전
-                    </button>
-                    <button id="nextSlideBtn" class="btn btn-primary">
-                        다음 <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="slide-indicator">
-                    <span id="currentSlideNum">1</span>/<span id="totalSlideNum">5</span>
+    <div class="container presentation-container">
+        <div class="slide-area" id="slideArea">
+            <!-- 슬라이드들이 여기에 동적으로 추가됩니다 -->
+        </div>
+        
+        <div class="sidebar">
+            <div class="participant-list">
+                <h3>참가자 목록</h3>
+                <div id="participantListContainer">
+                    <!-- 참가자 목록이 여기에 동적으로 추가됩니다 -->
                 </div>
             </div>
             
-            <div class="sidebar">
-                <div class="participant-list">
-                    <h3>참가자 목록</h3>
-                    <div id="participantListContainer">
-                        <!-- 참가자 목록이 여기에 동적으로 추가됩니다 -->
-                    </div>
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- 채팅 메시지가 여기에 동적으로 추가됩니다 -->
                 </div>
-                
-                <div class="chat-area">
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- 채팅 메시지가 여기에 동적으로 추가됩니다 -->
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="chatInput" placeholder="메시지 입력...">
-                        <button id="sendMessageBtn" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="메시지 입력...">
+                    <button id="sendMessageBtn" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="/js/common.js"></script>
+    <script src="js/common.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 초기 데이터 설정
-            let currentSlide = 0;
-            let totalSlides = SLIDES.length;
-            
-            // DOM 요소
-            const slideTitle = document.getElementById('slideTitle');
-            const slideContent = document.getElementById('slideContent');
-            const currentSlideNum = document.getElementById('currentSlideNum');
-            const totalSlideNum = document.getElementById('totalSlideNum');
-            const prevSlideBtn = document.getElementById('prevSlideBtn');
-            const nextSlideBtn = document.getElementById('nextSlideBtn');
+            const slideArea = document.getElementById('slideArea');
             const participantListContainer = document.getElementById('participantListContainer');
             const participantCount = document.getElementById('participantCount');
             const chatMessages = document.getElementById('chatMessages');
@@ -104,33 +104,41 @@
             const copyRoomBtn = document.getElementById('copyRoomBtn');
             const exitBtn = document.getElementById('exitBtn');
             
-            // 유저 정보 표시
-            userName.textContent = USER.name;
-            roomIdDisplay.textContent = USER.roomId;
-            totalSlideNum.textContent = totalSlides;
-            
-            // 슬라이드 표시 함수
-            function showSlide(slideIndex) {
-                if (slideIndex < 0 || slideIndex >= totalSlides) {
-                    return;
-                }
+            function renderSlides() {
+                slideArea.innerHTML = '';
                 
-                currentSlide = slideIndex;
-                const slide = SLIDES[slideIndex];
+                SLIDES.forEach((slide, index) => {
+                    const slideElement = document.createElement('div');
+                    slideElement.className = 'slide-content';
+                    slideElement.dataset.slideIndex = index;
+                    
+                    const titleElement = document.createElement('h2');
+                    titleElement.textContent = slide.title;
+                    
+                    const contentElement = document.createElement('div');
+                    contentElement.innerHTML = formatMessage(slide.content);
+
+                    slideElement.appendChild(titleElement);
+                    slideElement.appendChild(contentElement);
+
+                    
+                    // 이미지 추가
+                    if (slide.image) {
+                        const imageElement = document.createElement('img');
+                        imageElement.src = slide.image;
+                        imageElement.alt = slide.title;
+                        imageElement.style.maxWidth = '100%'; // 이미지 크기 조정
+                        imageElement.style.maxHeight = '300px'; // 최대 높이 설정
+                        slideElement.appendChild(imageElement);
+
+                    }
                 
-                slideTitle.textContent = slide.title;
-                slideContent.innerHTML = formatMessage(slide.content);
-                currentSlideNum.textContent = slideIndex + 1;
-                
-                // 버튼 상태 업데이트
-                prevSlideBtn.disabled = slideIndex === 0;
-                nextSlideBtn.disabled = slideIndex === totalSlides - 1;
-                
-                // 발표자만 슬라이드 변경 서버에 알림
-                if (USER.isPresenter) {
-                    socket.emit('changeSlide', { slideNumber: slideIndex });
-                }
+                    
+                    slideArea.appendChild(slideElement);
+                });
             }
+
+            
             
             // 참가자 목록 업데이트 함수
             function updateParticipantList(participants) {
@@ -144,7 +152,7 @@
                     participantEl.innerHTML = `
                         <span>${participant.name} ${participant.isPresenter ? '(발표자)' : ''}</span>
                         <div class="participant-actions">
-                            ${!participant.isPresenter && USER.isPresenter ? 
+                            ${!participant.isPresenter ? 
                                 `<button class="btn btn-secondary transfer-presenter" data-id="${participant.id}">
                                     <i class="fas fa-crown" title="발표자 지정"></i>
                                 </button>` : ''}
@@ -177,20 +185,24 @@
                 `;
                 
                 chatMessages.appendChild(messageEl);
-                
-                // 스크롤을 맨 아래로
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
             
-            // 채팅 메시지 전송
+            // 채팅 메시지 전송 함수
             function sendMessage() {
                 const message = chatInput.value.trim();
-                
                 if (message) {
                     socket.emit('sendMessage', message);
                     chatInput.value = '';
                 }
             }
+            
+            // 초기 렌더링
+            renderSlides();
+            
+            // 유저 정보 표시
+            userName.textContent = USER.name;
+            roomIdDisplay.textContent = USER.roomId;
             
             // 룸 ID 복사
             copyRoomBtn.addEventListener('click', function() {
@@ -203,37 +215,12 @@
             // 나가기 버튼
             exitBtn.addEventListener('click', function() {
                 if (confirm('정말 나가시겠습니까?')) {
-                    localStorage.removeItem('roomId');
-                    localStorage.removeItem('isPresenter');
-                    window.location.href = '/';
+                    window.location.href = 'index.html';
                 }
             });
             
-            // 이전 슬라이드 버튼
-            prevSlideBtn.addEventListener('click', function() {
-                if (currentSlide > 0) {
-                    showSlide(currentSlide - 1);
-                }
-            });
-            
-            // 다음 슬라이드 버튼
-            nextSlideBtn.addEventListener('click', function() {
-                if (currentSlide < totalSlides - 1) {
-                    showSlide(currentSlide + 1);
-                }
-            });
-            
-            // 키보드 이벤트
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'ArrowLeft') {
-                    prevSlideBtn.click();
-                } else if (e.key === 'ArrowRight') {
-                    nextSlideBtn.click();
-                }
-            });
-            
-            // 채팅 입력 이벤트
-            chatInput.addEventListener('keypress', function(e) {
+            // 채팅 이벤트
+            chatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     sendMessage();
                 }
@@ -241,21 +228,32 @@
             
             sendMessageBtn.addEventListener('click', sendMessage);
             
-            // Socket.io 초기화
-            initializeSocket({
-                onConnect: () => {
-                    console.log('발표자 모드 소켓 연결 성공');
-                },
-                onConnectError: (error) => {
-                    console.error('소켓 연결 오류:', error);
-                    alert('서버 연결에 실패했습니다. 페이지를 새로고침 해주세요.');
-                },
-                onRoomState: (state) => {
-                    showSlide(state.currentSlide);
-                    if (state.participants) {
-                        updateParticipantList(Object.values(state.participants));
+            // 현재 슬라이드 추적 변수
+            let currentSlideIndex = 0;
+            
+            // 스크롤 이벤트 리스너 (발표자의 경우 소켓으로 동기화)
+            slideArea.addEventListener('scroll', function() {
+                const slides = this.querySelectorAll('.slide-content');
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                        if (currentSlideIndex !== index) {
+                            currentSlideIndex = index;
+                            // 현재 슬라이드 변경을 서버에 알림
+                            socket.emit('changeSlide', { slideNumber: index });
+                        }
                     }
-                },
+                });
+                
+                // 현재 슬라이드의 스크롤 위치를 소켓으로 전송
+                socket.emit('scrollPresentation', {
+                    scrollTop: this.scrollTop,
+                    slideNumber: currentSlideIndex
+                });
+            });
+            
+            // Socket.io 초기화
+            const socket = initializeSocket({
                 onParticipantsUpdate: (data) => {
                     updateParticipantList(data.participants);
                 },
@@ -263,7 +261,6 @@
                     addChatMessage(message);
                 },
                 onPresenterChanged: (data) => {
-                    // UI 업데이트
                     const isNowPresenter = data.newPresenterId === USER.id;
                     const wasPresenter = data.previousPresenterId === USER.id;
                     
@@ -271,13 +268,9 @@
                         alert('당신이 새로운 발표자로 지정되었습니다.');
                     } else if (wasPresenter) {
                         alert('발표자 권한이 다른 사용자에게 이전되었습니다.');
-                        window.location.href = '/viewer.html';
                     }
                 }
             });
-            
-            // 첫 슬라이드 표시
-            showSlide(0);
         });
     </script>
 </body>

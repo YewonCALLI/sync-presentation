@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>실시간 동기화 프레젠테이션</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>TypeLab</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <div class="join-form">
-            <h1>실시간 동기화 프레젠테이션</h1>
-            <div class="form-group">
-                <label for="roomId">룸 ID</label>
-                <div class="input-wrapper">
-                    <input type="text" id="roomId" class="form-control" placeholder="룸 ID 입력 또는 생성">
-                    <button id="generateRoomId" class="btn btn-secondary">랜덤 생성</button>
-                </div>
-            </div>
+            <h1>안녕하세요<br> 타입랩입니다!</h1>
+            <h2>시작하기 전, QR을 스캔해 주세요.<br>
+                모두가 함께 참여하는 공유회가 될 예정입니다.</h2><br>
+            <img src="static/typelab_qr.png">
             <div class="form-group">
                 <label for="userName">이름</label>
                 <input type="text" id="userName" class="form-control" placeholder="당신의 이름">
@@ -30,32 +25,15 @@
         </div>
     </div>
 
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="/js/common.js"></script>
+    <script src="js/common.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // URL 파라미터 확인
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('room')) {
-                document.getElementById('roomId').value = urlParams.get('room');
-            }
-            
-            // 랜덤 룸 ID 생성
-            document.getElementById('generateRoomId').addEventListener('click', function() {
-                const randomId = Math.random().toString(36).substring(2, 8);
-                document.getElementById('roomId').value = randomId;
-            });
-            
+        document.addEventListener('DOMContentLoaded', function() {            
             // 입장하기 버튼 클릭
             document.getElementById('joinBtn').addEventListener('click', function() {
-                const roomId = document.getElementById('roomId').value.trim();
+                const roomId = 1;
                 const userName = document.getElementById('userName').value.trim();
                 const isPresenter = document.getElementById('isPresenter').checked;
                 
-                if (!roomId) {
-                    alert('룸 ID를 입력해주세요.');
-                    return;
-                }
                 
                 if (!userName) {
                     alert('이름을 입력해주세요.');
@@ -68,7 +46,7 @@
                 localStorage.setItem('isPresenter', isPresenter);
                 
                 // 발표자 또는 시청자 페이지로 리다이렉트
-                window.location.href = isPresenter ? '/presenter.html' : '/viewer.html';
+                window.location.href = isPresenter ? 'presenter.html' : 'viewer.html';
             });
         });
     </script>

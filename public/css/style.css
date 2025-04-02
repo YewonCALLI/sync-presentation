@@ -1,4 +1,10 @@
-/* 공통 스타일 */
+@font-face {
+    font-family: 'BookkMyungjo-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +12,10 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'BookkMyungjo-Bd', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
+    color: #ff00ea;
+    background-color: #000000;
 }
 
 .container {
@@ -66,12 +72,8 @@ body {
 }
 
 .btn-danger {
-    background-color: #e74c3c;
+    background-color: #000000;
     color: white;
-}
-
-.btn-danger:hover:not(:disabled) {
-    background-color: #c0392b;
 }
 
 /* 폼 스타일 */
@@ -108,18 +110,19 @@ body {
 
 /* 로그인 폼 */
 .join-form {
-    max-width: 500px;
+    width: 80%;
+    text-align: center;
     margin: 50px auto;
     padding: 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.join-form img{
+    width: 50%;
+}
 .join-form h1 {
     margin-bottom: 30px;
     text-align: center;
-    color: #2c3e50;
+    color: #ffffff;
 }
 
 .join-form .btn-primary {
@@ -130,10 +133,8 @@ body {
 
 /* 헤더 */
 .header {
-    background-color: #2c3e50;
     color: white;
     padding: 15px 0;
-    margin-bottom: 20px;
 }
 
 .header-content {

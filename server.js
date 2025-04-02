@@ -125,6 +125,25 @@ io.on('connection', (socket) => {
     }
   });
   
+  // 그리기 포인트 전송
+  socket.on('drawPoint', (data) => {
+    const { roomId, point } = data;
+    
+    if (roomId && rooms[roomId]) {
+      // 모든 참가자에게 그리기 이벤트 브로드캐스트 (자신 제외)
+      socket.to(roomId).emit('drawPoint', {
+        point: point,
+        userId: socket.id
+      });
+      
+      if (point.type === 'clear') {
+        console.log(`룸 ${roomId}에서 ${socket.name}(${socket.id})가 캔버스를 지웠습니다.`);
+      } else if (point.type === 'start') {
+        console.log(`룸 ${roomId}에서 ${socket.name}(${socket.id})가 그리기 시작`);
+      }
+    }
+  });
+  
   // 메시지 전송
   socket.on('sendMessage', (message) => {
     const roomId = socket.roomId;

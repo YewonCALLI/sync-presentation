@@ -24,7 +24,8 @@ const SLIDES = [
         image : 'static/download (1).jpeg'
     },
     {
-        content: '2000년대 중반부터 타이포를 활용한 재밌는 실험들이 등장하기 시작했다. 실용적인 것부터 기괴한 것까지.',
+        content: '2000년대 중반부터 타이포를 활용한 재밌는 실험들이 등장하기 시작했다. 실용적인 것부터 기괴한 것까지.<br> <a href="https://erikdemaine.org/fonts/">Mathematical and Puzzle Fonts/Typefaces (MIT EECS)</a>',
+        contentType: 'html',
         image : 'static/image4.png'
     },
     {

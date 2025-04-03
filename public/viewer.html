@@ -427,22 +427,11 @@
             }
         },
         onSlideChanged: (data) => {
-            // 발표자가 슬라이드 변경 시 동기화
-            const slides = slideArea.querySelectorAll('.slide-content');
-            if (slides[data.slideNumber]) {
-                isScrollingFromPresenter = true;
-                slides[data.slideNumber].scrollIntoView({ behavior: 'smooth' });
-                currentSlideIndex = data.slideNumber;
-                setTimeout(() => { isScrollingFromPresenter = false; }, 500);
-            }
+        currentSlideIndex = data.slideNumber;
         },
         onScrollSync: (data) => {
-            // 발표자의 스크롤 위치 동기화
-            if (currentSlideIndex === data.slideNumber) {
-                isScrollingFromPresenter = true;
-                slideArea.scrollTop = data.scrollTop;
-                setTimeout(() => { isScrollingFromPresenter = false; }, 500);
-            }
+            // 스크롤 동기화 비활성화 (아무 작업 안 함)
+            // 사용자가 자유롭게 스크롤할 수 있음
         },
         onParticipantsUpdate: (data) => {
             updateParticipantList(data.participants);
@@ -456,16 +445,6 @@
         }
     });
     
-    // 참가자의 스크롤은 발표자에 의해서만 움직이도록 제한
-    slideArea.addEventListener('scroll', function() {
-        // 발표자에 의한 스크롤이 아닌 경우 원래 위치로 복원
-        if (!isScrollingFromPresenter) {
-            const slides = this.querySelectorAll('.slide-content');
-            if (slides[currentSlideIndex]) {
-                slides[currentSlideIndex].scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    });
 });
    </script>
 </body>

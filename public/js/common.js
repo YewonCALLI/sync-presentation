@@ -10,6 +10,7 @@ const SLIDES = [
     {
         title: '컴퓨터의 발명',
         content: '<a href="https://blog.naver.com/moons4ir/223439412594">아타나소프-베리 컴퓨터(Atanasoff–Berry Computer)</a>는 세계 최초의 전자식 컴퓨터이다.',
+        contentType: 'html', 
         image : 'static/firstcomputer.jpeg'
     },
     {
@@ -35,7 +36,7 @@ const SLIDES = [
     },
     {
         title: '지금까지 어떤 것들을 했냐면요...',
-        content: '<a href="https://p5js.org" target="_blank">p5.js</a>라는 프로그래밍 언어에 대한 스터디',
+        content: '<a href="https://p5js.org" target="_blank">p5.js</a>라는 프로그래밍 언어에 대한 스터디 <br> <a href="https://yewoncalli.notion.site/1bfd23952c13802c94b4fd024a00da50?v=1bfd23952c13800580d6000ce671a514&pvs=4" target="_blank">TypeLab 스터디 자료</a>',
         contentType: 'html', 
         image: 'static/image6.png'
     },
@@ -45,14 +46,34 @@ const SLIDES = [
         contentType: 'html',
     },
     {
-        title : '폰트 학습 위한 예제 (장예원)',
+        title : '인터랙션에 관한 예제 (김봄)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/qhMc2aiLo" style="width:95%; height:450px;"></iframe></div>',
+        contentType: 'html',
+    },
+    {
+        title : '폰트 제어를 위한 예제 (장예원)',
         content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/FqW2GFQaX" style="width:95%; height:450px;"></iframe></div>',
         contentType: 'html',
     },
     {
         title: '모션에 관한 예제 (손정우)',
         content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/sonjw7139/full/QGq2Hg0Lt" style="width:95%; height:550px;"></iframe></div>',
-        contentType: 'html',
+        contentType: 'html'
+    },
+    {
+        title: '영상 제어에 관한 예제 (한예슬)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/DzLctxJN6" style="width:95%; height:550px;"></iframe></div>',
+        contentType: 'html'
+    },
+    {
+        title : '함수에 관한 예제 (한용파)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/hanyongpa/full/NJ6D_ZOc3" style="width:95%; height:550px;"></iframe></div>',
+        contentType: 'html'
+    },
+    {
+        title : '배열에 관한 예제 (박성훈)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/Orwiss/full/r3D7oFUvx" style="width:95%; height:550px;"></iframe></div>',
+        contentType: 'html'
     }
 ];
 

@@ -125,6 +125,7 @@ body {
     text-align: center;
     margin: 30px auto;
     padding: 20px;
+    white-space: nowrap;
 }
 
 .join-form img {
@@ -203,10 +204,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px; /* 모바일에서 패딩 줄임 */
     gap: 15px;
     text-align: center;
-    overflow-y: auto; /* 스크롤 가능하게 */
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
 }
 
@@ -223,8 +223,23 @@ body {
 
 .slide-content iframe {
     width: 700px;
-    height: 450px; /* 고정 높이 설정 */
-    min-height: 300px; /* 최소 높이 설정 */
+    height: 550px; /* 고정 높이 설정 */
+}
+
+.iframe-container {
+    width: 105%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0; /* 패딩 제거 */
+}
+
+.iframe-container iframe {
+    width: 100%; /* 더 넓게 설정 */
+    max-width: 100%; /* 최대 너비도 더 넓게 */
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .slide-navigation {

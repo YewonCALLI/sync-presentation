@@ -130,6 +130,7 @@ body {
 .join-form img {
     width: 50%;
     max-width: 300px; /* 최대 너비 제한 */
+    margin-top: 20px;
     height: auto; /* 비율 유지 */
 }
 
@@ -141,6 +142,7 @@ body {
 }
 
 .join-form .btn-primary {
+    background-color: #FF00EA;
     width: 100%;
     padding: 12px;
     font-size: 18px;

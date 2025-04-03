@@ -15,7 +15,8 @@ const SLIDES = [
     },
     {
         title: '타이포와 알고리즘',
-        content: 'Ben Laposky의 전자 추상화 실험, 최초의 디지털 그래픽 실험.',
+        content: '<a href="https://youtu.be/AgjtKQCm95I?si=m2DePNvVELHLYv1s&t=622">Ben Laposky의 전자 추상화 실험</a>, 최초의 디지털 그래픽 실험.',
+        contentType: 'html',
         image : 'static/images (3).jpg'
     },
     {
@@ -32,7 +33,8 @@ const SLIDES = [
     },
     {
         title: 'Computational Design for Korean Typography',
-        content: '- 타입페이스의 골격 구조 추출 및 분석 (Skeletonization)\n - 한글 타이포그래피 제작에 편리함을 주는 도구\n - 알고리즘을 활용한 나만의 한글 타이포 만들기'
+        content: '- 타입페이스의 골격 구조 추출 및 분석 (Skeletonization)\n - 한글 타이포그래피 제작에 편리함을 주는 도구\n - 알고리즘을 활용한 나만의 한글 타이포 만들기',
+        image : 'static/IMG_8004.JPG'
     },
     {
         title: '지금까지 어떤 것들을 했냐면요...',
@@ -41,39 +43,44 @@ const SLIDES = [
         image: 'static/image6.png'
     },
     {
-        title : '변수 학습을 위한 예제 (김지혜)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/maziyo/full/bbOv9AWcc" style="width:95%; height:450px;"></iframe></div>',
+        title : '변수에 관한 예제 (김지혜)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/maziyo/full/bbOv9AWcc" style="width:90vw; height:450px;"></iframe></div>',
         contentType: 'html',
     },
     {
-        title : '인터랙션에 관한 예제 (김봄)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/qhMc2aiLo" style="width:95%; height:450px;"></iframe></div>',
+        title : '마우스 인터랙션에 관한 예제 (김봄)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/qhMc2aiLo" style="width:90vw; height:450px;"></iframe></div>',
         contentType: 'html',
     },
     {
         title : '폰트 제어를 위한 예제 (장예원)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/FqW2GFQaX" style="width:95%; height:450px;"></iframe></div>',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/FqW2GFQaX" style="width:90vw; height:450px;"></iframe></div>',
         contentType: 'html',
     },
     {
-        title: '모션에 관한 예제 (손정우)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/sonjw7139/full/QGq2Hg0Lt" style="width:95%; height:550px;"></iframe></div>',
+        title: '삼각함수에 관한 예제 (손정우)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/sonjw7139/full/QGq2Hg0Lt" style="width:90vw; height:550px;"></iframe></div>',
         contentType: 'html'
     },
     {
-        title: '영상 제어에 관한 예제 (한예슬)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/DzLctxJN6" style="width:95%; height:550px;"></iframe></div>',
+        title: '영상 필터링에 관한 예제 (한예슬)',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/blockbwriting/full/DzLctxJN6" style="width:90vw; height:550px;"></iframe></div>',
         contentType: 'html'
     },
     {
         title : '함수에 관한 예제 (한용파)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/hanyongpa/full/NJ6D_ZOc3" style="width:95%; height:550px;"></iframe></div>',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/hanyongpa/full/NJ6D_ZOc3" style="width:90vw; height:550px;"></iframe></div>',
         contentType: 'html'
     },
     {
         title : '배열에 관한 예제 (박성훈)',
-        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/Orwiss/full/r3D7oFUvx" style="width:95%; height:550px;"></iframe></div>',
+        content: '<div class="iframe-container"><iframe src="https://editor.p5js.org/Orwiss/full/r3D7oFUvx" style="width:90vw; height:550px;"></iframe></div>',
         contentType: 'html'
+    },
+    {
+        title : '최종 결과물',
+        content:'TypeLab 아카이빙 홈페이지 (with. 개인 작품)',
+        image: 'static/IMG_7953.JPG'
     }
 ];
 

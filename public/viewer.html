@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>참가자 모드 - 실시간 동기화 프레젠테이션</title>
+    <title>TypeLab - participants</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -31,6 +31,17 @@
             width: 100%; 
             max-width: 100%;
             overflow-x: hidden;
+        }
+        /* 아스키 아트 스타일 */
+        .ascii-art {
+            position: absolute;
+            font-family: monospace;
+            color: rgba(255, 0, 255);
+            font-size: 12px;
+            white-space: pre;
+            line-height: 1;
+            z-index: 5;
+            pointer-events: none;
         }
 
         @media (max-width: 768px) {
@@ -66,7 +77,7 @@
     <div class="header">
         <div class="container">
             <div class="header-content">
-                <h1>참가자 모드 - 실시간 동기화 프레젠테이션</h1>
+                <h1>TypeLab</h1>
                 <div class="header-info">
                     <span>
                         <i class="fas fa-user"></i>
@@ -103,82 +114,279 @@
     <script src="js/common.js"></script>
    <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const slideArea = document.getElementById('slideArea');
-    const participantsOverlay = document.getElementById('participantsOverlay');
-    const participantCount = document.getElementById('participantCount');
-    const userName = document.getElementById('userName');
-    const roomIdDisplay = document.getElementById('roomId');
-    const exitBtn = document.getElementById('exitBtn');
-    
-    // 슬라이드 렌더링 함수
-    function renderSlides() {
-        slideArea.innerHTML = '';
-        
-        SLIDES.forEach((slide, index) => {
-            const slideElement = document.createElement('div');
-            slideElement.className = 'slide-content';
-            slideElement.dataset.slideIndex = index;
+            const slideArea = document.getElementById('slideArea');
+            const participantsOverlay = document.getElementById('participantsOverlay');
+            const participantCount = document.getElementById('participantCount');
+            const userName = document.getElementById('userName');
+            const roomIdDisplay = document.getElementById('roomId');
+            const exitBtn = document.getElementById('exitBtn');
+            const container = document.querySelector('.presentation-container');
             
-            // title이 있을 경우에만 추가
-            if (slide.title) {
-                const titleElement = document.createElement('h2');
-                titleElement.textContent = slide.title;
-                slideElement.appendChild(titleElement);
-            }
-            
-            // content가 있을 경우에만 추가
-            if (slide.content) {
-                const contentElement = document.createElement('div');
-                // formatMessage 함수를 사용하지 않고 직접 innerHTML 설정
-                // 또는 slide.contentType을 확인하여 HTML 여부 결정
-                if (slide.contentType === 'html') {
-                    contentElement.innerHTML = slide.content;
-                } else {
-                    contentElement.innerHTML = formatMessage(slide.content);
+            // 아스키 아트 그래픽 추가
+            const asciiArtItems = [
+                {
+                    art: `
+   .--.      
+  |o_o |     
+  |:_/ |     
+ //   \\ \\    
+(|     | )   
+/'\\_   _/\\   
+\\___)=(___/
+                    `,
+                    width: 150,
+                    height: 100
+                },
+                {
+                    art: `
+   ,_,
+  (O,O)
+  (   )
+-"-\"\"-"-
+                    `,
+                    width: 100,
+                    height: 60
+                },
+                {
+                    art: `
+ /\\_/\\  
+( o.o ) 
+ > ^ <  
+                    `,
+                    width: 80,
+                    height: 50
+                },
+                {
+                    art: `
+.　∧＿∧ 쓰담쓰담
+（´・ω・)つ＿ ∧
+（つ　 / (・ω・｡)
+ しーＪ　 (nnノ)
+
+                    `,
+                    width: 120,
+                    height: 70
+                },
+                {
+                    art: `
+  ,---.
+ / o o \\
+( >   < )
+ '-----'
+                    `,
+                    width: 100,
+                    height: 60
                 }
-                slideElement.appendChild(contentElement);
+            ];
+            
+            // 아스키 아트 랜덤 생성 함수
+            function createRandomAsciiArt() {
+                const artCount = Math.floor(Math.random() * 5) + 3; // 3-7개 생성
+                
+                for (let i = 0; i < artCount; i++) {
+                    const randomItem = asciiArtItems[Math.floor(Math.random() * asciiArtItems.length)];
+                    const artElement = document.createElement('div');
+                    artElement.className = 'ascii-art';
+                    artElement.textContent = randomItem.art;
+                    
+                    // 랜덤 위치
+                    const maxX = window.innerWidth - randomItem.width;
+                    const maxY = window.innerHeight - randomItem.height;
+                    const randomX = Math.floor(Math.random() * maxX);
+                    const randomY = Math.floor(Math.random() * maxY);
+                    
+                    artElement.style.left = randomX + 'px';
+                    artElement.style.top = randomY + 'px';
+                    
+                    // 랜덤 회전
+                    const randomRotation = Math.floor(Math.random() * 30) - 15;
+                    artElement.style.transform = `rotate(${randomRotation}deg)`;
+                    
+                    // 랜덤 투명도 (더 투명하게)
+                    const randomOpacity = (Math.random() * 0.2) + 0.9;
+                    artElement.style.opacity = randomOpacity;
+                    
+                    container.appendChild(artElement);
+                }
             }
             
-            // 이미지 추가
-            if (slide.image) {
-                const imageElement = document.createElement('img');
-                imageElement.src = slide.image;
-                imageElement.alt = slide.title || 'Slide ' + (index + 1);
-                imageElement.style.maxWidth = '100%'; // 이미지 크기 조정
-                imageElement.style.maxHeight = '300px'; // 최대 높이 설정
-                slideElement.appendChild(imageElement);
+            // 슬라이드 렌더링 함수
+            function renderSlides() {
+                slideArea.innerHTML = '';
+                
+                SLIDES.forEach((slide, index) => {
+                    const slideElement = document.createElement('div');
+                    slideElement.className = 'slide-content';
+                    slideElement.dataset.slideIndex = index;
+                    
+                    // title이 있을 경우에만 추가
+                    if (slide.title) {
+                        const titleElement = document.createElement('h2');
+                        titleElement.textContent = slide.title;
+                        slideElement.appendChild(titleElement);
+                    }
+                    
+                    // content가 있을 경우에만 추가
+                    if (slide.content) {
+                        const contentElement = document.createElement('div');
+                        // contentType을 확인하여 HTML 여부 결정
+                        if (slide.contentType === 'html') {
+                            contentElement.innerHTML = slide.content;
+                        } else {
+                            contentElement.innerHTML = formatMessage(slide.content);
+                        }
+                        slideElement.appendChild(contentElement);
+                    }
+                    
+                    // 이미지 추가
+                    if (slide.image) {
+                        const imageElement = document.createElement('img');
+                        imageElement.src = slide.image;
+                        imageElement.alt = slide.title || 'Slide ' + (index + 1);
+                        imageElement.style.maxWidth = '100%'; // 이미지 크기 조정
+                        imageElement.style.maxHeight = '300px'; // 최대 높이 설정
+                        slideElement.appendChild(imageElement);
+                    }
+                    
+                    // 슬라이드에 최소한 하나의 요소가 있을 경우에만 추가
+                    if (slide.title || slide.content || slide.image) {
+                        slideArea.appendChild(slideElement);
+                    } else {
+                        // 내용이 없는 경우에도 빈 슬라이드 추가 (인덱스 유지를 위해)
+                        const emptyElement = document.createElement('div');
+                        emptyElement.className = 'slide-content empty-slide';
+                        emptyElement.dataset.slideIndex = index;
+                        emptyElement.innerHTML = '<div class="empty-slide-text">슬라이드 ' + (index + 1) + '</div>';
+                        slideArea.appendChild(emptyElement);
+                    }
+                    if (index === SLIDES.length - 1) {
+                        const colorWheelContainer = document.createElement('div');
+                        colorWheelContainer.className = 'color-wheel-container';
+                        colorWheelContainer.innerHTML = `
+                            <h3>여러분의 색상을 선택해주세요!</h3>
+                            <div class="selected-color-preview"></div>
+                            <input type="color" id="colorWheel" value="#3366cc">
+                            <button id="sendColorBtn" class="btn btn-primary">색상 보내기</button>
+                            <div class="my-sent-colors"></div>
+                        `;
+                    slideElement.appendChild(colorWheelContainer);
+                    }
+                });
+                addColorWheelListeners();
+            }
+
+            function addColorWheelListeners() {
+                const colorWheel = document.getElementById('colorWheel');
+                const sendColorBtn = document.getElementById('sendColorBtn');
+                const preview = document.querySelector('.selected-color-preview');
+                const mySentColors = document.querySelector('.my-sent-colors');
+                
+                if (!colorWheel || !sendColorBtn) return;
+                
+                // 색상 선택 시 미리보기 업데이트
+                colorWheel.addEventListener('input', function() {
+                    preview.style.backgroundColor = this.value;
+                });
+                
+                // 초기 미리보기 설정
+                preview.style.backgroundColor = colorWheel.value;
+                
+                // 색상 보내기 버튼 클릭 이벤트
+                sendColorBtn.addEventListener('click', function() {
+                    const selectedColor = colorWheel.value;
+                    
+                    // 발표자에게 색상 전송
+                    socket.emit('sendColor', {
+                        color: selectedColor,
+                        userId: USER.id,
+                        userName: USER.name
+                    });
+                    
+                    // 내가 보낸 색상 표시
+                    const colorElement = document.createElement('div');
+                    colorElement.className = 'sent-color-item';
+                    colorElement.style.backgroundColor = selectedColor;
+                    mySentColors.appendChild(colorElement);
+                });
             }
             
-            // 슬라이드에 최소한 하나의 요소가 있을 경우에만 추가
-            if (slide.title || slide.content || slide.image) {
-                slideArea.appendChild(slideElement);
-            } else {
-                // 내용이 없는 경우에도 빈 슬라이드 추가 (인덱스 유지를 위해)
-                const emptyElement = document.createElement('div');
-                emptyElement.className = 'slide-content empty-slide';
-                emptyElement.dataset.slideIndex = index;
-                emptyElement.innerHTML = '<div class="empty-slide-text">슬라이드 ' + (index + 1) + '</div>';
-                slideArea.appendChild(emptyElement);
+            // 랜덤 위치 생성 함수
+            function getRandomPosition() {
+                const padding = 20;
+                const maxX = window.innerWidth - 150 - padding;
+                const maxY = window.innerHeight - 50 - padding;
+                return {
+                    x: Math.max(padding, Math.floor(Math.random() * maxX)),
+                    y: Math.max(padding, Math.floor(Math.random() * maxY))
+                };
             }
-        });
-    }
-    
-    // 참가자 목록 업데이트 함수
-    function updateParticipantList(participants) {
-        participantsOverlay.innerHTML = '';
-        participantCount.textContent = participants.length;
-        
-        participants.forEach(participant => {
-            const participantEl = document.createElement('span');
-            participantEl.className = `participant-badge ${participant.isPresenter ? 'participant-presenter' : ''}`;
-            participantEl.textContent = participant.name + (participant.isPresenter ? ' (발표자)' : '');
             
-            participantsOverlay.appendChild(participantEl);
-        });
-    }
-    
-    // 초기 렌더링
-    renderSlides();
+            // 참가자 목록 랜덤 위치 업데이트 함수
+            function updateParticipantList(participants) {
+                participantCount.textContent = participants.length;
+                
+                // 기존 랜덤 참가자 요소 제거
+                const existingParticipants = document.querySelectorAll('.random-participant');
+                existingParticipants.forEach(el => el.remove());
+                
+                // 새로운 참가자 요소 생성
+                participants.forEach(participant => {
+                    const position = getRandomPosition();
+                    const participantEl = document.createElement('div');
+                    participantEl.className = `random-participant ${participant.isPresenter ? 'presenter' : ''}`;
+                    participantEl.textContent = participant.name;
+                    
+                    participantEl.style.left = position.x + 'px';
+                    participantEl.style.top = position.y + 'px';
+                    
+                    // 랜덤 회전
+                    const randomRotation = Math.floor(Math.random() * 10) - 5;
+                    participantEl.style.transform = `rotate(${randomRotation}deg)`;
+                    
+                    // 랜덤 애니메이션 지연
+                    participantEl.style.animationDelay = (Math.random() * 2) + 's';
+                    
+                    // 발표자가 아닌 경우, 클릭 이벤트 추가 (발표자 권한 이전)
+                    if (!participant.isPresenter) {
+                        participantEl.title = '발표자로 지정하려면 클릭하세요';
+                        participantEl.addEventListener('click', function() {
+                            if (confirm(`${participant.name}님을 발표자로 지정하시겠습니까?`)) {
+                                socket.emit('transferPresenter', participant.id);
+                            }
+                        });
+                    }
+                    
+                    container.appendChild(participantEl);
+                });
+            }
+            
+            // 초기 렌더링
+            renderSlides();
+            createRandomAsciiArt();
+            
+            // 윈도우 크기 변경 시 아스키 아트 다시 생성
+            window.addEventListener('resize', function() {
+                // 기존 아스키 아트 제거
+                const existingArt = document.querySelectorAll('.ascii-art');
+                existingArt.forEach(el => el.remove());
+                
+                // 새로운 아스키 아트 생성
+                createRandomAsciiArt();
+                
+                // 참가자 위치도 업데이트
+                const participants = Array.from(document.querySelectorAll('.random-participant')).map(el => {
+                    return {
+                        name: el.textContent.replace(' (발표자)', ''),
+                        isPresenter: el.classList.contains('presenter'),
+                        id: el.dataset.participantId
+                    };
+                });
+                
+                updateParticipantList(participants);
+            });
+
+            renderSlides();
+            createRandomAsciiArt();
     
     // 유저 정보 표시
     userName.textContent = USER.name;

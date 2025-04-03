@@ -80,7 +80,7 @@ body {
 }
 
 .btn-danger {
-    background-color: #000000;
+    background-color: #FF00EA;
     color: white;
 }
 
@@ -149,22 +149,24 @@ body {
 
 /* 헤더 */
 .header {
-    color: white;
-    padding: 15px 0;
+    position: absolute;
+    color: #FF00EA;
+    padding: 15px 40px;
     width: 100%;
+    z-index: 10000;
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* 모바일에서 자동 줄바꿈 */
+    flex-wrap: wrap;
     gap: 10px;
 }
 
 .header h1 {
     margin: 0;
-    font-size: clamp(1.2rem, 4vw, 1.5rem); /* 반응형 폰트 크기 */
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 .header-info {
@@ -227,7 +229,7 @@ body {
 }
 
 .iframe-container {
-    width: 105%;
+    width: 70vw;
     display: flex;
     justify-content: center;
     overflow: hidden;

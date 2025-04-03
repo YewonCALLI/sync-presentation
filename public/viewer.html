@@ -280,18 +280,6 @@
                         emptyElement.innerHTML = '<div class="empty-slide-text">슬라이드 ' + (index + 1) + '</div>';
                         slideArea.appendChild(emptyElement);
                     }
-                    if (index === SLIDES.length - 1) {
-                        const colorWheelContainer = document.createElement('div');
-                        colorWheelContainer.className = 'color-wheel-container';
-                        colorWheelContainer.innerHTML = `
-                            <h3>여러분의 색상을 선택해주세요!</h3>
-                            <div class="selected-color-preview"></div>
-                            <input type="color" id="colorWheel" value="#3366cc">
-                            <button id="sendColorBtn" class="btn btn-primary">색상 보내기</button>
-                            <div class="my-sent-colors"></div>
-                        `;
-                    slideElement.appendChild(colorWheelContainer);
-                    }
                 });
                 addColorWheelListeners();
             }

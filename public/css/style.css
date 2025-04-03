@@ -53,12 +53,11 @@ body {
 }
 
 .btn-primary {
-    background-color: #3498db;
     color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: #2980b9;
+    background-color: #FF00EA;
 }
 
 .btn-secondary {
@@ -87,6 +86,7 @@ body {
 /* 폼 스타일 */
 .form-group {
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .form-group label {
@@ -125,11 +125,10 @@ body {
     text-align: center;
     margin: 30px auto;
     padding: 20px;
-    white-space: nowrap;
 }
 
 .join-form img {
-    width: 80%;
+    width: 50%;
     max-width: 300px; /* 최대 너비 제한 */
     height: auto; /* 비율 유지 */
 }

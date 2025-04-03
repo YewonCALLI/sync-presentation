@@ -17,6 +17,10 @@
                 <label for="userName">이름</label>
                 <input type="text" id="userName" class="form-control" placeholder="당신의 이름">
             </div>
+            <div class="form-check">
+                <input type="checkbox" id="isPresenter">
+                <label for="isPresenter">발표자로 참가</label>
+            </div>
             <button id="joinBtn" class="btn btn-primary">입장하기</button>
         </div>
     </div>
@@ -28,7 +32,7 @@
             document.getElementById('joinBtn').addEventListener('click', function() {
                 const roomId = 1;
                 const userName = document.getElementById('userName').value.trim();
-                const isPresenter = false;
+                const isPresenter = document.getElementById('isPresenter').checked;
                 
                 
                 if (!userName) {
